@@ -6,6 +6,29 @@ ECG_WINDOW = 2000
 CLASS_SIZES = [96,30,36]
 
 def load_ecg_data(path='./ECGData.mat'):
+    """ Takes the raw data in matlab format and shapes it in samples of length equal to 2000.
+
+        The function is divided in the following steps:
+
+            * 1. Unpack the data. The loadmat function returns an stream with all the values for all the samples.
+            We slice the data in windows of 65536 values, giving is the total 162 samples.
+            * 2. Windowing. Once we have the samples, we again, window the data in windows of 2000 values. The last
+            window is left out since does not match the 2000 values constrain
+            * 3. Assign labels. We then, assign the corresponding labels to each of the windows. We do it by enlarging 
+            each label from the original sample by 32 (number of subsamples of length 2000 from the original 65536 length) 
+            to match the new number of samples.
+            * 4. Adding metadata. At last, we add some additional fields, such as the original sample where the sample was extracted
+            and the chunk assigned to the original sample.
+
+        Parameters
+        ----------
+        path: path to the file where the dat lies.
+
+        Returns
+        ------
+        ecg_labeled_data: The dataframe with all the samples of 2000 of length
+    """
+        
     matdata = loadmat(path)
     ecg_raw_data = np.array(matdata['ECGData'])[0][0][0]
     # the  values of .mat files are read like a stream (don't take into account each registers)
