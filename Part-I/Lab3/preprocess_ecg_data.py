@@ -1,5 +1,4 @@
 from scipy.io import loadmat
-import pandas as pd
 import numpy as np
 
 ECG_LEN = 65536
